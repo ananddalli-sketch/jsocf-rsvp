@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSOCF Paryushan 2026 - RSVP</title>
+<title>JSOCF Paryushan 2026 — Sponsorship</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#F2F2F2;
+    --cream:#FAF3E6;
     --card:#FFFFFF;
     --ink:#2E2A47;
     --ink-soft:#655F82;
@@ -32,7 +32,7 @@
   .wrap{max-width:640px;margin:0 auto;padding:0 18px;}
 
   header.hero{
-    background:linear-gradient(180deg,#FAFAFA 0%, var(--cream) 100%);
+    background:linear-gradient(180deg,#FFF9EF 0%, var(--cream) 100%);
     border-bottom:1px solid var(--line);
     padding:36px 0 26px;
     text-align:center;
@@ -213,8 +213,8 @@
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">Jain Society of Central Florida</div>
-    <h1>Paryushan 2026 - RSVP, Sponsorship & Sapna Darshan Lucky Draw</h1>
-    <p>8th Sept to 16th Sept 2026 - Please let us know your RSVP for Ekasana / Swamivatsalya, Sponsorship Labh for Ekasana/Swamivatsalya & Morning/Evening Lectures and entry for Sapna Darshan Lucky Draw.</p>
+    <h1>Paryushan 2026 Sponsorship</h1>
+    <p>Please submit this form with your interest to sponsor Ekasana/Swamivatsalya, Paarna and Morning / Evening Lectures</p>
   </div>
 </header>
 
@@ -241,8 +241,8 @@
     </section>
 
     <section class="block">
-      <h2>RSVP by Day</h2>
-      <p class="sub">Tap a day to open it. Check "Attending" for any day you're joining Ekasana / Swamivatsalya.</p>
+      <h2>Sponsorship By Day</h2>
+      <p class="sub">Tap a day to open it and select any sponsorships you're interested in.</p>
       <div id="daysContainer"></div>
     </section>
 
@@ -272,10 +272,10 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbws3XVEHFVdAwHqGjt79
 const EVENT_DAYS = [
   { label: "Day 1", date: "Tue, Sept 8" },
   { label: "Day 2", date: "Wed, Sept 9" },
-  { label: "Day 3", date: "Thu, Sept 10" },
+  { label: "Day 3", date: "Thu, Sept 10", tagOverride: "Chaudas" },
   { label: "Day 4", date: "Fri, Sept 11" },
   { label: "Day 5", date: "Sat, Sept 12" },
-  { label: "Day 6", date: "Sun, Sept 13", eveningOnly: true, titleSuffix: "Sapna Darshan & Mahaveer Janma Vanchan", noEkasanaSponsor: true, hasLuckyDraw: true },
+  { label: "Day 6", date: "Sun, Sept 13", eveningOnly: true, forceMorningSponsor: true, tagOverride: "Mahaveer Janma Vanchan", noEkasanaSponsor: true },
   { label: "Day 7", date: "Mon, Sept 14" },
   { label: "Day 8", date: "Tue, Sept 15", morningOnly: true },
   { label: "Day 9", date: "Wed, Sept 16", eveningOnly: true, morningOnly: true, tagOverride: "Paarna", attendLabel: "Attending Paarna Brunch", sponsorEkasanaLabel: "Paarna Brunch" },
@@ -286,10 +286,7 @@ const container = document.getElementById('daysContainer');
 
 EVENT_DAYS.forEach((day, idx) => {
   const n = idx + 1;
-  const tag = day.tagOverride ? day.tagOverride
-            : day.eveningOnly ? "Evening lecture only"
-            : day.morningOnly ? "Morning lecture only"
-            : "Ekasana / Swamivatsalya + both lectures";
+  const tag = day.tagOverride ? day.tagOverride : "";
 
   const details = document.createElement('details');
   details.className = 'day';
@@ -306,7 +303,7 @@ EVENT_DAYS.forEach((day, idx) => {
       <span class="price">$301</span>
     </div>`;
   }
-  if (!day.eveningOnly) {
+  if (!day.eveningOnly || day.forceMorningSponsor) {
     sponsorRows += `
     <div class="sponsor-opt">
       <div class="opt-left">
@@ -332,50 +329,18 @@ EVENT_DAYS.forEach((day, idx) => {
       <span class="day-num">${n}</span>
       <span class="day-meta">
         <div class="date">${day.label} — ${day.date}${day.titleSuffix ? ' - ' + day.titleSuffix : ''}</div>
-        <div class="tag">${tag}</div>
+        ${tag ? `<div class="tag">${tag}</div>` : ''}
       </span>
       <span class="chevron"></span>
     </summary>
     <div class="day-body">
-      <div class="attend-row">
-        <input type="checkbox" id="d${n}_attend" name="day${n}_attending" value="Yes">
-        <label for="d${n}_attend">${day.attendLabel || "Attending Ekasana / Swamivatsalya"}</label>
-      </div>
-      <div class="headcount" id="d${n}_headcount">
-        <div class="field">
-          <label for="d${n}_adults">Adults</label>
-          <input type="number" min="0" id="d${n}_adults" name="day${n}_adults">
-        </div>
-        <div class="field">
-          <label for="d${n}_kids">Kids</label>
-          <input type="number" min="0" id="d${n}_kids" name="day${n}_kids">
-        </div>
-      </div>
-      <div class="error-text" id="d${n}_error">Please enter the number of adults and/or kids attending.</div>
       <div class="sponsor-block">
-        <h3>Sponsorship (optional)</h3>
+        <h3>Sponsorship</h3>
         ${sponsorRows}
       </div>
-      ${day.hasLuckyDraw ? `
-      <div class="sponsor-block">
-        <h3>Sapna Darshan Lucky Draw</h3>
-        <p class="helper" style="margin:0 0 10px;">Please check the below box to enter the Lucky Draw for Sapna Darshan</p>
-        <div class="sponsor-opt">
-          <div class="opt-left">
-            <input type="checkbox" id="d${n}_lucky" name="day${n}_lucky_draw" value="Yes">
-            <label class="opt-label" for="d${n}_lucky">Sapna Darshan Lucky Draw</label>
-          </div>
-        </div>
-      </div>` : ''}
     </div>
   `;
   container.appendChild(details);
-
-  const attendCb = details.querySelector(`#d${n}_attend`);
-  const headcountDiv = details.querySelector(`#d${n}_headcount`);
-  attendCb.addEventListener('change', () => {
-    headcountDiv.classList.toggle('show', attendCb.checked);
-  });
 });
 
 // ===================== Submit handling =====================
@@ -386,38 +351,6 @@ const submitBtn = document.getElementById('submitBtn');
 form.addEventListener('submit', function(e){
   e.preventDefault();
   formError.style.display = 'none';
-
-  let firstInvalid = null;
-  let valid = true;
-
-  // Validate: for each day, if attending is checked, adults+kids can't both be empty
-  EVENT_DAYS.forEach((day, idx) => {
-    const n = idx + 1;
-    const attend = document.getElementById(`d${n}_attend`).checked;
-    const adultsEl = document.getElementById(`d${n}_adults`);
-    const kidsEl = document.getElementById(`d${n}_kids`);
-    const errEl = document.getElementById(`d${n}_error`);
-    const adults = adultsEl.value.trim();
-    const kids = kidsEl.value.trim();
-
-    if (attend && adults === '' && kids === '') {
-      errEl.style.display = 'block';
-      valid = false;
-      if (!firstInvalid) firstInvalid = adultsEl.closest('details');
-    } else {
-      errEl.style.display = 'none';
-    }
-  });
-
-  if (!valid) {
-    formError.textContent = "Please fill in the headcount for any day you're attending.";
-    formError.style.display = 'block';
-    if (firstInvalid) {
-      firstInvalid.open = true;
-      firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
-    }
-    return;
-  }
 
   if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
     formError.textContent = "Form isn't connected to a Sheet yet — set SCRIPT_URL in the HTML file (see Code.gs setup steps).";
